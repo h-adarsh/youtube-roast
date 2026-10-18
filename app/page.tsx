@@ -150,14 +150,45 @@ function YouTubeRoastApp() {
     router.replace("/");
   };
 
+  // Scroll to #how-it-works if hash is present on mount or state change
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#how-it-works" && !result && !isLoading) {
+      const timer = setTimeout(() => {
+        const el = document.getElementById("how-it-works");
+        el?.scrollIntoView({ behavior: "smooth" });
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [result, isLoading]);
+
+  const handleNavigateHowItWorks = () => {
+    if (result) {
+      setResult(null);
+    }
+    setTimeout(() => {
+      const el = document.getElementById("how-it-works");
+      el?.scrollIntoView({ behavior: "smooth" });
+      window.history.pushState(null, "", "#how-it-works");
+    }, 80);
+  };
+
+  const handleGoHome = () => {
+    if (result) {
+      setResult(null);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.history.pushState(null, "", "/");
+  };
+
   return (
     <div className="min-h-screen flex flex-col justify-between selection:bg-roast-fire selection:text-white">
       {/* Navbar */}
       <Navbar
         onOpenPrivacy={() => setShowPrivacyModal(true)}
         onOpenDelete={() => setShowDeleteModal(true)}
-        onOpenSetupGuide={() => setShowSetupModal(true)}
         hasActiveResult={!!result}
+        onNavigateHowItWorks={handleNavigateHowItWorks}
+        onGoHome={handleGoHome}
       />
 
       {/* Main View Area */}
@@ -196,13 +227,6 @@ function YouTubeRoastApp() {
               className="hover:underline cursor-pointer"
             >
               Privacy Policy
-            </button>
-            <span>•</span>
-            <button
-              onClick={() => setShowSetupModal(true)}
-              className="hover:underline cursor-pointer"
-            >
-              API Setup
             </button>
             <span>•</span>
             <Link href="/duel" className="hover:underline">

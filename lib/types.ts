@@ -41,6 +41,7 @@ export interface CleanedFacts {
   brainrotScore: number; // 0-100 calculated deterministically
   sampleVideoTitles: string[];
   samplePlaylists: string[];
+  hasNoLikedVideos?: boolean;
 }
 
 export const PrescriptionSchema = z.object({

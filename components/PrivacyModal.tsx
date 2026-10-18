@@ -57,9 +57,12 @@ export function PrivacyModal({ isOpen, onClose }: PrivacyModalProps) {
           </div>
 
           <div className="p-4 bg-[#ffe600] border-2 border-[#333333]">
-            <h4 className="font-bold text-[14px] uppercase mb-1">Gemini AI Prompt Guardrails &amp; Sanitization</h4>
-            <p>
-              Video titles and playlist names are strictly sanitized to prevent prompt injections. Gemini receives only aggregated numbers and sanitized titles. Gemini does NOT receive your email, phone number, address, or billing details.
+            <h4 className="font-bold text-[14px] uppercase mb-1">Gemini AI Data Transparency &amp; Guardrails</h4>
+            <p className="mb-2">
+              Video titles and channel names are strictly sanitized to prevent prompt injections. Gemini receives only aggregated numbers and sanitized titles. Gemini does NOT receive your email, phone number, address, or billing details.
+            </p>
+            <p className="text-[12px] opacity-90 border-t border-[#333333]/30 pt-2">
+              <strong>Free vs Paid API Notice:</strong> Under Google&apos;s standard terms for free-tier Gemini API keys, prompts may be sampled by Google to improve its models. To ensure 100% zero-retention/no-training processing, use a paid tier Gemini API key or Google Cloud Vertex AI.
             </p>
           </div>
 

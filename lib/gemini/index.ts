@@ -38,10 +38,14 @@ export function buildGeminiPrompt(facts: CleanedFacts, options: RoastOptions = {
 - Write in sharp, contemporary internet culture slang (brainrot, 2 AM rabbit hole, unhinged, caught in 4K, dopamine receptors on life support).`;
   }
 
+  const emptyNote = facts.hasNoLikedVideos
+    ? `\nSPECIAL CONDITION: This user has 0 public liked videos (either their Liked Videos playlist is set to 'Private' in YouTube Settings, or they lurk strictly in incognito). Roast their extreme paranoia, secrecy, and fear of digital footprints while referencing their subscriptions and playlists!\n`
+    : "";
+
   return `You are a savage, witty, and perceptive internet culture comedian. Your job is to ROAST a user based strictly on their real YouTube watch habits, liked videos, and subscriptions.
 
 <RULES_AND_GUARDRAILS>
-1. EVERY SINGLE JOKE MUST DIRECTLY REFERENCE real channels, specific numbers, or video titles from the provided user facts below. Generic roasts are strictly forbidden.
+1. EVERY SINGLE JOKE MUST DIRECTLY REFERENCE real channels, specific numbers, or video titles from the provided user facts below. Generic roasts are strictly forbidden.${emptyNote}
 2. ${toneInstructions}
 3. ${languageInstructions}
 4. Roast their habits, dopamine addictions, and taste ONLY.
@@ -52,19 +56,21 @@ export function buildGeminiPrompt(facts: CleanedFacts, options: RoastOptions = {
 
 <USER_DATA>
 Brainrot Score (Calculated deterministically by algorithm): ${facts.brainrotScore} / 100
-Total Videos Analyzed: ${facts.totalVideosAnalyzed}
+Total Videos Analyzed: ${facts.totalVideosAnalyzed} ${facts.hasNoLikedVideos ? "(Likes set to Private or 0 public likes)" : ""}
+Total Subscriptions: ${facts.totalSubscriptions}
+Total Playlists: ${facts.totalPlaylists}
 Shorts Share: ${facts.shortsPercentage}% of all watched videos are sub-60-second dopamine hits
 Educational Content Share: ${facts.educationalPercentage}%
 Entertainment Content Share: ${facts.entertainmentPercentage}%
 
 Top Repeated Channels:
-${sanitizedChannels.map((c) => `- "${c.name}" (watched ${c.count} times)`).join("\n")}
+${sanitizedChannels.length > 0 ? sanitizedChannels.map((c) => `- "${c.name}"`).join("\n") : "- (No public channels or private)"}
 
 Category Breakdown:
 ${facts.categoryDistribution.slice(0, 4).map((c) => `- ${c.category}: ${c.percentage}%`).join("\n")}
 
 Sample Video Titles:
-${sanitizedTitles.map((t) => `- "${t}"`).join("\n")}
+${sanitizedTitles.length > 0 ? sanitizedTitles.map((t) => `- "${t}"`).join("\n") : "- (Zero public liked video titles)"}
 
 Sample Playlist Names:
 ${sanitizedPlaylists.length > 0 ? sanitizedPlaylists.map((p) => `- "${p}"`).join("\n") : "- (No public playlists)"}
@@ -105,6 +111,69 @@ Respond with a JSON object with EXACTLY this structure:
  */
 export function generateLocalFallbackRoast(facts: CleanedFacts, options: RoastOptions = {}): GeminiRoastOutput {
   const language = options.language || "en";
+
+  // Special Ghost Lurker Fallback if 0 liked videos
+  if (facts.hasNoLikedVideos || facts.totalVideosAnalyzed === 0) {
+    const subChannel = facts.topChannels[0]?.name || "various mystery channels";
+    if (language === "hinglish") {
+      return {
+        archetype: "Chhupa Rustam Incognito Ghost",
+        one_line_description: "Bhai ne YouTube history aur liked videos pe aise tala mara hai jaise Swiss bank ka khata ho—cringe expose hone ka itna khauf?",
+        roast_report: `Bhai tumne apna YouTube account itna private rakha hai ki CIA wale bhi tumse training le sakte hain. 0 liked videos mili hain hume! Ya toh tumne YouTube Settings mein 'Keep all my liked videos private' on karke rakha hai taaki kisi ko pata na chale tum raat ke 3 baje kya cringe dekhte ho, ya phir tum chupke se incognito mein scroll karte ho.\n\nLekin tumhare subscriptions (${facts.totalSubscriptions}) aur playlists se tumhari aadhi pol toh khul hi gayi hai. "${subChannel}" jaise channels ko subscribe karke sochte ho ki koi judge nahi karega? Dil pe haath rakh ke bolo, aakhri baar kab bina dare kisi video pe like mara tha?\n\nSetting kholo: YouTube > Settings > Privacy, aur 'Keep liked videos private' ko uncheck karo agar dum hai. Warna agle janam tak aise hi digital shadow banke guzar-basar karo!`,
+        red_flags: [
+          "0 public liked videos found—dopamine khareedte ho par receipt phaad dete ho",
+          "Private mode mein binge karna taaki YouTube Wrapped na ban jaye",
+          `Subscribed to ${facts.totalSubscriptions} channels par ek like karne mein ungli dard hoti hai`,
+          "Browser history clear karne ki aadat itni pakki ki khud ka naam bhool jao",
+        ],
+        habits_exposed: [
+          "Incognito window mein 4 ghante reels dekhna",
+          "Like button ko aise avoid karna jaise rishtedar ka phone call",
+          "Settings mein jaake har cheez ko private/hidden mark karna",
+        ],
+        brainrot_analysis: `Aapka Brainrot Score ${facts.brainrotScore}/100 hai kyunki bina public history ke bhi aapka screen time aapki aankhon ke neeche ke dark circles se saaf dikh raha hai.`,
+        prescription: {
+          diagnosis: "Paranoid Incognito Dopamine Hoarding Syndrome",
+          stage: "Stage 2 Ghost Lurker",
+          dosages: [
+            "YouTube Settings mein jaakar 'Keep liked videos private' uncheck karein",
+            "Kam se kam 3 acchi videos pe publicly Like button dabayein",
+            "1 ghanta real insaano se bina incognito mode baat karein",
+          ],
+          warning: "Agar privacy settings nahi hatayi toh agle saal Google bhi aapko bot samajh ke captcha de dega.",
+        },
+      };
+    }
+
+    return {
+      archetype: "The Paranoid Incognito Ghost",
+      one_line_description: "You have your liked videos locked down like nuclear launch codes because you're terrified the world will find out your true guilty pleasures.",
+      roast_report: `We scanned your account and found exactly ZERO public liked videos. Either you have 'Keep all my liked videos private' toggled on in YouTube Privacy Settings, or you lurk exclusively in Incognito mode like a digital fugitive. What are you hiding? 4-hour ASMR soap cutting marathons? 2012 Minecraft parody songs?\n\nEven with your likes under witness protection, your ${facts.totalSubscriptions} subscriptions and playlists gave away the game. Subscribing to "${subChannel}" while refusing to leave a single like is peak algorithmic cowardice. You want the free dopamine without leaving digital footprints.\n\nIf you want the full ruthless roast, head to YouTube > Settings > Privacy and turn off 'Keep all my liked videos private'. Until then, enjoy your status as YouTube's most secretive lurker.`,
+      red_flags: [
+        "0 public liked videos—treating your YouTube feed like classified government documents",
+        "Refusing to click the Like button like it costs $5 every time",
+        `Hoarding ${facts.totalSubscriptions} subscriptions in complete silence`,
+        "Probably clears browser cache every 45 minutes out of sheer instinct",
+      ],
+      habits_exposed: [
+        "Lurking in comment sections without ever leaving an upvote",
+        "Watching guilty pleasures exclusively in private windows",
+        "Pretending you only watch educational documentaries in public",
+      ],
+      brainrot_analysis: `At ${facts.brainrotScore}/100, your score reflects extreme algorithmic stealth. Your dopamine receptors are functioning in total darkness.`,
+      prescription: {
+        diagnosis: "Pathological Incognito Concealment Disorder",
+        stage: "Stage 2 Stealth Lurker",
+        dosages: [
+          "Uncheck 'Keep all my liked videos private' in YouTube Settings",
+          "Publicly like at least 5 videos that represent your genuine taste",
+          "30 minutes of natural daylight without incognito sunglasses",
+        ],
+        warning: "Continued secrecy will cause YouTube to recommend 10-hour blank white noise videos to match your blank profile.",
+      },
+    };
+  }
+
   const top1 = facts.topChannels[0]?.name || "DailyBrainrot";
   const top2 = facts.topChannels[1]?.name || "MemeCentral";
   const top3 = facts.topChannels[2]?.name || "MrBeast";
@@ -182,6 +251,37 @@ export function generateLocalFallbackRoast(facts: CleanedFacts, options: RoastOp
 }
 
 /**
+ * Executes fetch with retry and exponential backoff for 429 and 5xx errors
+ */
+async function fetchWithRetry(url: string, options: RequestInit, retries = 2, baseDelay = 1000): Promise<Response> {
+  let attempt = 0;
+  while (true) {
+    try {
+      const response = await fetch(url, options);
+      if (response.status === 429 || (response.status >= 500 && response.status < 600)) {
+        if (attempt < retries) {
+          attempt++;
+          const waitTime = baseDelay * Math.pow(2, attempt - 1) + Math.random() * 300;
+          console.warn(`Gemini returned status ${response.status}. Retrying in ${Math.round(waitTime)}ms (attempt ${attempt}/${retries})...`);
+          await new Promise((resolve) => setTimeout(resolve, waitTime));
+          continue;
+        }
+      }
+      return response;
+    } catch (err) {
+      if (attempt < retries) {
+        attempt++;
+        const waitTime = baseDelay * Math.pow(2, attempt - 1) + Math.random() * 300;
+        console.warn(`Gemini network error. Retrying in ${Math.round(waitTime)}ms (attempt ${attempt}/${retries})...`);
+        await new Promise((resolve) => setTimeout(resolve, waitTime));
+        continue;
+      }
+      throw err;
+    }
+  }
+}
+
+/**
  * Calls the Gemini API with JSON mode, prompt injection defense, and strict Zod validation
  */
 export async function generateGeminiRoast(
@@ -198,8 +298,8 @@ export async function generateGeminiRoast(
   const prompt = buildGeminiPrompt(facts, options);
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`,
+    const response = await fetchWithRetry(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
@@ -217,7 +317,9 @@ export async function generateGeminiRoast(
             responseMimeType: "application/json",
           },
         }),
-      }
+      },
+      2,
+      1000
     );
 
     if (!response.ok) {

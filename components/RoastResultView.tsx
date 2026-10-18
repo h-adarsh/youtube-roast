@@ -222,6 +222,18 @@ export function RoastResultView({
                 YOUR REAL NUMBERS
               </div>
 
+              {/* Ghost Profile Banner if 0 public liked videos */}
+              {(facts.hasNoLikedVideos || facts.totalVideosAnalyzed === 0) && (
+                <div className="mb-4 p-3 bg-[#ffe600] border-2 border-[#333333] text-left">
+                  <div className="flex items-center gap-1.5 font-bold text-[12px] text-[#333333] uppercase">
+                    <span>👻 GHOST PROFILE DETECTED</span>
+                  </div>
+                  <p className="text-[11px] text-[#333333] mt-1 leading-snug">
+                    We found <strong>0 public liked videos</strong>! Your liked videos are likely set to <strong>Private</strong> in YouTube Settings (YouTube &gt; Settings &gt; Privacy), or you never click like. We roasted your extreme secrecy instead!
+                  </p>
+                </div>
+              )}
+
               {/* Shorts vs Longform Bar */}
               <div className="mb-5">
                 <div className="flex justify-between text-[12px] font-bold uppercase mb-1.5">
@@ -282,21 +294,21 @@ export function RoastResultView({
               </div>
 
               {/* Stats row - Strictly Aligned Baselines in Storybook Karl Style */}
-              <div className="grid grid-cols-2 gap-3 pt-4 border-t-2 border-[#333333]">
-                <div className="p-3 bg-[#ffe600] border-2 border-[#333333] flex flex-col justify-between min-h-[88px]">
-                  <div className="text-[11px] font-bold text-[#333333] uppercase tracking-wider leading-tight min-h-[28px] flex items-start">
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3 pt-4 border-t-2 border-[#333333]">
+                <div className="p-2.5 sm:p-3 bg-[#ffe600] border-2 border-[#333333] flex flex-col justify-between min-h-[84px] sm:min-h-[88px]">
+                  <div className="text-[10px] xs:text-[11px] font-bold text-[#333333] uppercase tracking-normal leading-tight min-h-[26px] flex items-start">
                     Videos Studied
                   </div>
-                  <div className="font-display text-[32px] text-[#333333] leading-none mt-auto pt-1">
+                  <div className="font-display text-[28px] sm:text-[32px] text-[#333333] leading-none mt-auto pt-1">
                     {facts.totalVideosAnalyzed}
                   </div>
                 </div>
 
-                <div className="p-3 bg-[#ffe600] border-2 border-[#333333] flex flex-col justify-between min-h-[88px]">
-                  <div className="text-[11px] font-bold text-[#333333] uppercase tracking-wider leading-tight min-h-[28px] flex items-start">
+                <div className="p-2.5 sm:p-3 bg-[#ffe600] border-2 border-[#333333] flex flex-col justify-between min-h-[84px] sm:min-h-[88px]">
+                  <div className="text-[10px] xs:text-[11px] font-bold text-[#333333] uppercase tracking-normal leading-tight min-h-[26px] flex items-start">
                     Subscriptions
                   </div>
-                  <div className="font-display text-[32px] text-[#333333] leading-none mt-auto pt-1">
+                  <div className="font-display text-[28px] sm:text-[32px] text-[#333333] leading-none mt-auto pt-1">
                     {facts.totalSubscriptions}
                   </div>
                 </div>

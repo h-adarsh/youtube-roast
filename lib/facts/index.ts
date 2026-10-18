@@ -60,19 +60,21 @@ export function calculateFacts(
   const playlistsCount = totalCounts?.totalPlaylists ?? playlists.length;
 
   if (totalVideos === 0) {
+    const subChannels = subscriptions.slice(0, 8).map((s) => ({ name: s.title, count: 1 }));
     return {
       totalVideosAnalyzed: 0,
       totalSubscriptions: subsCount,
       totalPlaylists: playlistsCount,
       shortsCount: 0,
       shortsPercentage: 0,
-      topChannels: [],
+      topChannels: subChannels,
       categoryDistribution: [],
       educationalPercentage: 0,
       entertainmentPercentage: 0,
-      brainrotScore: 10,
+      brainrotScore: subsCount > 0 ? Math.min(65, 20 + Math.round(subsCount / 3)) : 15,
       sampleVideoTitles: [],
       samplePlaylists: playlists.map((p) => p.title).slice(0, 5),
+      hasNoLikedVideos: true,
     };
   }
 

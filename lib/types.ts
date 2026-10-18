@@ -45,22 +45,22 @@ export interface CleanedFacts {
 }
 
 export const PrescriptionSchema = z.object({
-  diagnosis: z.string().min(5).max(120),
-  stage: z.string().min(3).max(40),
-  dosages: z.array(z.string().min(5).max(150)).min(3).max(5),
-  warning: z.string().min(10).max(200),
+  diagnosis: z.string().min(3).max(250),
+  stage: z.string().min(2).max(80),
+  dosages: z.array(z.string().min(3).max(350)).min(2).max(8),
+  warning: z.string().min(5).max(350),
 });
 
 export type DopaminePrescription = z.infer<typeof PrescriptionSchema>;
 
 // Zod Schema for Gemini Roast Output Validation
 export const GeminiRoastSchema = z.object({
-  archetype: z.string().min(3).max(60),
-  one_line_description: z.string().min(10).max(200),
-  roast_report: z.string().min(50).max(2500),
-  red_flags: z.array(z.string().min(5).max(200)).min(3).max(7),
-  habits_exposed: z.array(z.string().min(5).max(200)).min(2).max(5),
-  brainrot_analysis: z.string().min(20).max(500),
+  archetype: z.string().min(2).max(120),
+  one_line_description: z.string().min(5).max(350),
+  roast_report: z.string().min(30).max(4000),
+  red_flags: z.array(z.string().min(3).max(350)).min(2).max(10),
+  habits_exposed: z.array(z.string().min(3).max(350)).min(2).max(8),
+  brainrot_analysis: z.string().min(10).max(1000),
   prescription: PrescriptionSchema.optional(),
 });
 

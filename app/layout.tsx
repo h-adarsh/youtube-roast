@@ -14,6 +14,11 @@ export const metadata: Metadata = {
     "YouTube taste analyzer",
   ],
   authors: [{ name: "YouTube Roast AI" }],
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: ["/icon.svg"],
+  },
   openGraph: {
     title: "YouTube Roast • AI Dopamine Audit",
     description: "Find out your Brainrot Score (0–100) based on your real YouTube watch data.",

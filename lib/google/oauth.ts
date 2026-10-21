@@ -41,6 +41,10 @@ export function createGoogleAuthUrl(options: GoogleAuthUrlOptions) {
   };
 }
 
+export type ExchangeTokenResult =
+  | { success: true; accessToken: string; expiresIn: number; idToken?: string; scope?: string }
+  | { success: false; error: string };
+
 /**
  * Exchange Authorization Code for Access Token with PKCE
  */
@@ -50,31 +54,45 @@ export async function exchangeCodeForTokens(
   clientId: string,
   clientSecret: string,
   redirectUri: string
-): Promise<{ accessToken: string; expiresIn: number; idToken?: string; scope?: string } | null> {
+): Promise<ExchangeTokenResult> {
   try {
+    const cleanClientId = clientId.trim();
+    const cleanClientSecret = clientSecret.trim();
+    const cleanRedirectUri = redirectUri.trim();
+    const cleanCode = code.trim();
+    const cleanVerifier = codeVerifier.trim();
+
     const response = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        client_id: clientId,
-        client_secret: clientSecret,
-        code: code,
-        code_verifier: codeVerifier,
+        client_id: cleanClientId,
+        client_secret: cleanClientSecret,
+        code: cleanCode,
+        code_verifier: cleanVerifier,
         grant_type: "authorization_code",
-        redirect_uri: redirectUri,
+        redirect_uri: cleanRedirectUri,
       }),
     });
 
     if (!response.ok) {
       const err = await response.text();
       console.error("Token exchange failed:", response.status, err);
-      return null;
+      let errorMsg = `token_exchange_${response.status}`;
+      try {
+        const json = JSON.parse(err);
+        errorMsg = json.error_description || json.error || errorMsg;
+      } catch {
+        errorMsg = err.slice(0, 100);
+      }
+      return { success: false, error: errorMsg };
     }
 
     const data = await response.json();
     return {
+      success: true,
       accessToken: data.access_token,
       expiresIn: data.expires_in,
       idToken: data.id_token,
@@ -82,7 +100,7 @@ export async function exchangeCodeForTokens(
     };
   } catch (err) {
     console.error("Error exchanging code for tokens:", err);
-    return null;
+    return { success: false, error: err instanceof Error ? err.message : "network_error" };
   }
 }
 

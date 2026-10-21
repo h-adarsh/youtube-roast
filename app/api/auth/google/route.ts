@@ -18,10 +18,10 @@ export async function GET(request: Request) {
   const lang = (url.searchParams.get("lang") as RoastLanguage) || "en";
   const severity = (url.searchParams.get("severity") as RoastSeverity) || "savage";
 
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || url.origin;
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${baseUrl}/api/auth/callback`;
+  const clientId = process.env.GOOGLE_CLIENT_ID?.trim();
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim();
+  const baseUrl = (process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || url.origin).trim();
+  const redirectUri = (process.env.GOOGLE_REDIRECT_URI || `${baseUrl}/api/auth/callback`).trim();
 
   if (!clientId || !clientSecret) {
     return NextResponse.redirect(`${baseUrl}/?auth_error=missing_credentials`);

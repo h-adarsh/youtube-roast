@@ -29,9 +29,9 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${baseUrl}/?auth_error=missing_verifier`);
   }
 
-  const clientId = process.env.GOOGLE_CLIENT_ID || "";
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET || "";
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${baseUrl}/api/auth/callback`;
+  const clientId = (process.env.GOOGLE_CLIENT_ID || "").trim();
+  const clientSecret = (process.env.GOOGLE_CLIENT_SECRET || "").trim();
+  const redirectUri = (process.env.GOOGLE_REDIRECT_URI || `${baseUrl}/api/auth/callback`).trim();
 
   // Check query param scope if provided by Google
   const urlScope = url.searchParams.get("scope") || "";
@@ -42,8 +42,9 @@ export async function GET(request: Request) {
 
   // Exchange code for tokens
   const tokenData = await exchangeCodeForTokens(code, codeVerifier, clientId, clientSecret, redirectUri);
-  if (!tokenData || !tokenData.accessToken) {
-    return NextResponse.redirect(`${baseUrl}/?auth_error=token_exchange_failed`);
+  if (!tokenData.success) {
+    console.error("Token exchange failed with reason:", tokenData.error);
+    return NextResponse.redirect(`${baseUrl}/?auth_error=${encodeURIComponent(tokenData.error || "token_exchange_failed")}`);
   }
 
   // Double-check granted scopes in token response

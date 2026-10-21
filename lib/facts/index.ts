@@ -43,7 +43,8 @@ export function parseISO8601Duration(duration: string): number {
 }
 
 /**
- * Calculates deterministic quantitative facts and the Brainrot score from raw YouTube data
+ * Calculates deterministic quantitative facts, delusion score, and Brainrot metrics
+ * from raw YouTube data (liked videos, subscriptions, playlists).
  */
 export function calculateFacts(
   videos: YouTubeVideoItem[],
@@ -59,6 +60,16 @@ export function calculateFacts(
   const subsCount = totalCounts?.totalSubscriptions ?? subscriptions.length;
   const playlistsCount = totalCounts?.totalPlaylists ?? playlists.length;
 
+  const detailedSubscriptions = subscriptions.slice(0, 20).map((s) => ({
+    title: s.title,
+    description: s.description || "",
+  }));
+
+  const detailedPlaylists = playlists.slice(0, 12).map((p) => ({
+    title: p.title,
+    itemCount: p.itemCount || 0,
+  }));
+
   if (totalVideos === 0) {
     const subChannels = subscriptions.slice(0, 8).map((s) => ({ name: s.title, count: 1 }));
     return {
@@ -73,21 +84,45 @@ export function calculateFacts(
       entertainmentPercentage: 0,
       brainrotScore: subsCount > 0 ? Math.min(65, 20 + Math.round(subsCount / 3)) : 15,
       sampleVideoTitles: [],
-      samplePlaylists: playlists.map((p) => p.title).slice(0, 5),
+      samplePlaylists: playlists.map((p) => p.title).slice(0, 8),
       hasNoLikedVideos: true,
+      attentionSpanSeconds: 45,
+      delusionScore: playlistsCount > 5 ? 78 : 42,
+      detailedLikedVideos: [],
+      detailedSubscriptions,
+      detailedPlaylists,
     };
   }
 
-  // 1. Shorts calculation (< 60s)
+  // 1. Shorts calculation (< 60s) & average duration
   let shortsCount = 0;
+  let totalDurationSeconds = 0;
+  let durationCount = 0;
+
+  const detailedLikedVideos: { title: string; channelTitle: string; durationSeconds: number; isShort: boolean }[] = [];
+
   for (const v of videos) {
     const dur = v.durationSeconds ?? (v.duration ? parseISO8601Duration(v.duration) : 0);
-    // If under 60 seconds (and > 0), consider a Short
-    if (dur > 0 && dur <= 60) {
+    const isShort = dur > 0 && dur <= 60;
+    if (isShort) {
       shortsCount++;
     }
+    if (dur > 0) {
+      totalDurationSeconds += dur;
+      durationCount++;
+    }
+    detailedLikedVideos.push({
+      title: v.title,
+      channelTitle: v.channelTitle || "Unknown Channel",
+      durationSeconds: dur,
+      isShort,
+    });
   }
+
   const shortsPercentage = Math.round((shortsCount / totalVideos) * 100);
+  const avgDuration = durationCount > 0 ? Math.round(totalDurationSeconds / durationCount) : 180;
+  // Perceived attention span shrinks drastically if shorts dominate
+  const attentionSpanSeconds = Math.max(8, Math.round(avgDuration * (1 - (shortsPercentage / 100) * 0.75)));
 
   // 2. Channel frequency count
   const channelCounts: Record<string, number> = {};
@@ -98,7 +133,7 @@ export function calculateFacts(
   const topChannels = Object.entries(channelCounts)
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count)
-    .slice(0, 8);
+    .slice(0, 10);
 
   // 3. Category distribution
   const categoryCounts: Record<string, number> = {};
@@ -131,36 +166,34 @@ export function calculateFacts(
   const educationalPercentage = Math.round((educationalCount / totalVideos) * 100);
   const entertainmentPercentage = Math.round((entertainmentCount / totalVideos) * 100);
 
-  // 5. Brainrot Score: Deterministic weighted formula
-  // Score starts with a baseline of 20
+  // 5. Delusion Score: Gap between high-effort playlists/subscriptions and low-effort likes
+  // High playlists with lots of videos + high subscriptions + high shorts = MAXIMUM DELUSION
+  let delusionScore = 40;
+  if (playlistsCount > 3) delusionScore += 15;
+  if (playlistsCount > 10) delusionScore += 15;
+  if (shortsPercentage > 40) delusionScore += 20;
+  if (educationalPercentage < 15 && playlistsCount > 5) delusionScore += 10;
+  delusionScore = Math.min(99, Math.max(10, delusionScore));
+
+  // 6. Brainrot Score: Deterministic weighted formula
   let score = 20;
-
-  // + Up to 45 pts from Shorts share (linear scaling: 0% -> 0 pts, 100% -> 45 pts)
   score += Math.round((shortsPercentage / 100) * 45);
-
-  // + Up to 25 pts from Entertainment & Gaming dominance
   score += Math.round((entertainmentPercentage / 100) * 25);
-
-  // - Deduct up to 20 pts if user actually watches educational content
   score -= Math.round((educationalPercentage / 100) * 20);
 
-  // + Binge concentration penalty: if top 3 channels account for > 40% of watch activity
   const top3Count = topChannels.slice(0, 3).reduce((acc, c) => acc + c.count, 0);
   if (totalVideos > 5 && top3Count / totalVideos > 0.4) {
     score += 10;
   }
-
-  // + High subscription sprawl (subscribed to > 60 channels indicates chronic scrolling)
   if (subsCount > 60) {
     score += 5;
   }
 
-  // Clamp strictly between 5 and 99
   const brainrotScore = Math.min(99, Math.max(5, score));
 
-  // Extract representative sample titles (for AI prompt)
-  const sampleVideoTitles = videos.map((v) => v.title).slice(0, 15);
-  const samplePlaylists = playlists.map((p) => p.title).slice(0, 6);
+  // Extract representative sample titles and playlists
+  const sampleVideoTitles = videos.map((v) => v.title).slice(0, 25);
+  const samplePlaylists = playlists.map((p) => p.title).slice(0, 10);
 
   return {
     totalVideosAnalyzed: totalVideos,
@@ -175,5 +208,10 @@ export function calculateFacts(
     brainrotScore,
     sampleVideoTitles,
     samplePlaylists,
+    attentionSpanSeconds,
+    delusionScore,
+    detailedLikedVideos: detailedLikedVideos.slice(0, 25),
+    detailedSubscriptions,
+    detailedPlaylists,
   };
 }

@@ -58,7 +58,7 @@ export function DopaminePrescription({
   };
 
   return (
-    <div className="p-4 xs:p-5 sm:p-8 bg-[#ffffff] border-2 border-[#333333] my-5 sm:my-6">
+    <div className="cv-auto p-4 xs:p-5 sm:p-8 bg-[#ffffff] border-2 border-[#333333] my-5 sm:my-6">
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 mb-5 sm:mb-6 pb-3.5 sm:pb-4 border-b-2 border-[#333333]">
         <div>

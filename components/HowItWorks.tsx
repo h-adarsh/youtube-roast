@@ -38,7 +38,7 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="scroll-mt-10 w-full bg-[#ffe600] text-[#333333] py-10 sm:py-14 px-3 sm:px-6 relative overflow-hidden border-t-2 border-[#333333]"
+      className="cv-auto scroll-mt-10 w-full bg-[#ffe600] text-[#333333] py-10 sm:py-14 px-3 sm:px-6 relative overflow-hidden border-t-2 border-[#333333]"
     >
       {/* Floating Cartoon Clouds */}
       <div className="absolute top-6 right-10 w-28 pointer-events-none opacity-80 hidden md:block">

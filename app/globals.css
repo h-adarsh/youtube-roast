@@ -40,7 +40,11 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Use auto scroll-behavior for manual wheel/trackpad scrolling to ensure native 120Hz/60Hz hardware momentum */
+  scroll-behavior: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -53,7 +57,21 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: auto;
+}
+
+/* Modern content-visibility utility for offscreen cards to eliminate scroll paint overhead */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 500px;
+}
+
+/* Hardware layer acceleration for animated icons/badges */
+.gpu-accel {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 /* Headings in Changa One */

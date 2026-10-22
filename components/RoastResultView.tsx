@@ -301,7 +301,7 @@ export function RoastResultView({
         <div className="p-3 bg-[#333333] border-2 border-[#333333] text-[#ffffff] flex flex-col sm:flex-row items-center justify-between gap-2.5">
           <div className="flex items-center gap-2 text-center sm:text-left">
             <span className="relative flex h-2.5 w-2.5 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ef3b2c] opacity-75"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ef3b2c] opacity-75 gpu-accel"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#ef3b2c]"></span>
             </span>
             <div className="font-mono text-[11px] sm:text-[12px] font-bold tracking-wider uppercase">
@@ -507,11 +507,11 @@ export function RoastResultView({
         </div>
 
         {/* 💀 THE EXISTENTIAL DREAD & PSYCHOLOGICAL AUTOPSY (Black-Box Dossier) */}
-        <div className="p-5 sm:p-8 bg-[#111111] border-3 border-[#ef3b2c] text-[#ffffff] relative overflow-hidden shadow-2xl">
+        <div className="cv-auto p-5 sm:p-8 bg-[#111111] border-3 border-[#ef3b2c] text-[#ffffff] relative overflow-hidden shadow-2xl">
           {/* Watermark badge */}
           <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-[#ef3b2c]/40">
             <div className="flex items-center gap-2">
-              <Skull className="w-6 h-6 text-[#ef3b2c] animate-pulse" />
+              <Skull className="w-6 h-6 text-[#ef3b2c] animate-pulse gpu-accel" />
               <div>
                 <div className="font-display text-[18px] sm:text-[22px] tracking-wide text-[#ef3b2c] uppercase leading-none">
                   CLASSIFIED PSYCHOLOGICAL AUTOPSY
@@ -574,7 +574,7 @@ export function RoastResultView({
           <div className="lg:col-span-2 space-y-5 sm:space-y-6">
 
             {/* ✨ RE-DESIGNED: THE SAVAGE BREAKDOWN (Bite-Sized, Interactive & Eye-Catching) */}
-            <div className="p-4 xs:p-5 sm:p-7 bg-[#ffffff] border-2 border-[#333333]">
+            <div className="cv-auto p-4 xs:p-5 sm:p-7 bg-[#ffffff] border-2 border-[#333333]">
               {/* Header with View Mode Switcher */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b-2 border-[#333333] gap-2.5">
                 <div className="flex items-center gap-2">
@@ -818,7 +818,7 @@ export function RoastResultView({
             </div>
 
             {/* Forensic Receipts of Shame */}
-            <div className="p-4 xs:p-5 sm:p-7 bg-[#ffffff] border-2 border-[#333333]">
+            <div className="cv-auto p-4 xs:p-5 sm:p-7 bg-[#ffffff] border-2 border-[#333333]">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2 pb-2.5 border-b-2 border-[#333333]">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-5 h-5 text-[#ef3b2c]" />
@@ -853,7 +853,7 @@ export function RoastResultView({
 
             {/* Pathological Coping Rituals */}
             {roast.habits_exposed && roast.habits_exposed.length > 0 && (
-              <div className="p-4 xs:p-5 sm:p-6 bg-[#ffffff] border-2 border-[#333333]">
+              <div className="cv-auto p-4 xs:p-5 sm:p-6 bg-[#ffffff] border-2 border-[#333333]">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2 pb-2.5 border-b-2 border-[#333333]">
                   <div className="font-display text-[18px] xs:text-[20px] sm:text-[24px] text-[#333333] uppercase flex items-center gap-2">
                     <Activity className="w-5 h-5 text-[#007fff]" />
@@ -886,7 +886,7 @@ export function RoastResultView({
           <div className="space-y-5 sm:space-y-6">
 
             {/* Key Facts Summary */}
-            <div className="p-4 xs:p-5 sm:p-6 bg-[#ffffff] border-2 border-[#333333]">
+            <div className="cv-auto p-4 xs:p-5 sm:p-6 bg-[#ffffff] border-2 border-[#333333]">
               <div className="font-display text-[20px] sm:text-[24px] text-[#333333] uppercase mb-4">
                 THE RAW EVIDENCE
               </div>

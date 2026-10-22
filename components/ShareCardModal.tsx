@@ -11,6 +11,14 @@ interface ShareCardModalProps {
   result: RoastResult;
 }
 
+function getScoreLabel(score: number) {
+  if (score >= 85) return "Terminally Cooked";
+  if (score >= 70) return "Chronic Dopamine Sepsis";
+  if (score >= 50) return "Moderate Brainrot";
+  if (score >= 30) return "Mild Fatigue";
+  return "Ascetic Zen";
+}
+
 export function ShareCardModal({ isOpen, onClose, result }: ShareCardModalProps) {
   const [aspectRatio, setAspectRatio] = useState<"story" | "square">("story");
   const cardRef = useRef<HTMLDivElement>(null);
@@ -61,7 +69,7 @@ export function ShareCardModal({ isOpen, onClose, result }: ShareCardModalProps)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#333333]/70 overflow-y-auto">
-      <div className="relative w-full max-w-sm sm:max-w-md bg-[#ffe600] border-2 border-[#333333] p-4 sm:p-5 flex flex-col my-auto max-h-[96dvh]">
+      <div className="relative w-full max-w-[360px] sm:max-w-[420px] bg-[#ffe600] border-2 border-[#333333] shadow-[6px_6px_0px_#333333] p-4 sm:p-5 flex flex-col my-auto max-h-[96dvh]">
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b-2 border-[#333333] shrink-0">
           <h3 className="font-display text-[20px] text-[#333333] uppercase">
@@ -82,7 +90,7 @@ export function ShareCardModal({ isOpen, onClose, result }: ShareCardModalProps)
             onClick={() => setAspectRatio("story")}
             className={`px-3 py-1.5 text-[11px] font-bold uppercase border-2 border-[#333333] transition-all flex items-center gap-1.5 cursor-pointer ${
               aspectRatio === "story"
-                ? "bg-[#007fff] text-[#ffffff]"
+                ? "bg-[#007fff] text-[#ffffff] shadow-[2px_2px_0px_#333333]"
                 : "bg-[#ffffff] text-[#333333] hover:bg-gray-50"
             }`}
           >
@@ -95,7 +103,7 @@ export function ShareCardModal({ isOpen, onClose, result }: ShareCardModalProps)
             onClick={() => setAspectRatio("square")}
             className={`px-3 py-1.5 text-[11px] font-bold uppercase border-2 border-[#333333] transition-all flex items-center gap-1.5 cursor-pointer ${
               aspectRatio === "square"
-                ? "bg-[#007fff] text-[#ffffff]"
+                ? "bg-[#007fff] text-[#ffffff] shadow-[2px_2px_0px_#333333]"
                 : "bg-[#ffffff] text-[#333333] hover:bg-gray-50"
             }`}
           >
@@ -104,80 +112,88 @@ export function ShareCardModal({ isOpen, onClose, result }: ShareCardModalProps)
           </button>
         </div>
 
-        {/* Card Canvas Container */}
-        <div className="flex-1 flex items-center justify-center py-1 overflow-visible">
+        {/* Card Canvas Container with smooth scroll for small screens */}
+        <div className="flex-1 flex items-center justify-center py-2 px-1 overflow-y-auto min-h-0">
           {aspectRatio === "story" ? (
             /* 9:16 Vertical Story Card in Karl Style */
             <div
               ref={cardRef}
-              className="w-[280px] sm:w-[295px] h-[495px] sm:h-[515px] p-4 bg-[#ffe600] border-2 border-[#333333] relative overflow-hidden flex flex-col justify-between text-left shrink-0 text-[#333333]"
+              className="w-[290px] sm:w-[315px] h-[520px] sm:h-[555px] p-3.5 sm:p-4 bg-[#ffe600] border-2 border-[#333333] shadow-[4px_4px_0px_#333333] relative overflow-hidden flex flex-col justify-between text-left shrink-0 text-[#333333] gap-2"
             >
               {/* Top Watermark */}
-              <div className="flex items-center justify-between pb-2 border-b-2 border-[#333333] shrink-0">
-                <span className="font-display text-[15px] uppercase tracking-normal">
+              <div className="flex items-center justify-between pb-1.5 border-b-2 border-[#333333] shrink-0">
+                <span className="font-display text-[15px] sm:text-[16px] uppercase tracking-normal">
                   YOUTUBE ROAST
                 </span>
-                <span className="text-[9px] uppercase font-bold px-2 py-0.5 bg-[#ffffff] border border-[#333333]">
+                <span className="text-[9px] uppercase font-mono font-bold px-2 py-0.5 bg-[#ffffff] border border-[#333333]">
                   DOPAMINE AUDIT
                 </span>
               </div>
 
-              {/* Blue Globe Focal Emblem (1440px border-radius) */}
-              <div className="text-center py-2 px-3 bg-[#007fff] border-2 border-[#333333] rounded-globe my-1 text-[#ffffff] shrink-0 flex flex-col items-center justify-center">
-                <span className="text-[9px] uppercase font-bold tracking-widest text-[#ffffff]/90 block">
+              {/* Blue Score Globe (1440px border-radius) */}
+              <div className="text-center py-2 px-3 bg-[#007fff] border-2 border-[#333333] rounded-globe text-[#ffffff] shrink-0 flex flex-col items-center justify-center shadow-[2px_2px_0px_#333333]">
+                <span className="text-[8.5px] uppercase font-bold tracking-widest text-[#ffffff]/90 block">
                   BRAINROT INDEX
                 </span>
-                <div className="font-display text-[46px] text-[#ffffff] leading-none my-0.5">
+                <div className="font-display text-[38px] sm:text-[42px] text-[#ffffff] leading-none my-0.5">
                   {facts.brainrotScore}
-                  <span className="text-[16px] text-[#ffffff]/80 font-bold">/100</span>
+                  <span className="text-[15px] text-[#ffffff]/80 font-bold">/100</span>
                 </div>
-                <div className="text-[10px] font-bold text-[#333333] px-2 py-0.5 bg-[#ffe600] border border-[#333333] truncate max-w-[90%]">
+                <span className="text-[9px] font-mono font-black uppercase text-[#ffffff] px-2 py-0.5 bg-[#111111]/30 rounded">
+                  {getScoreLabel(facts.brainrotScore)}
+                </span>
+              </div>
+
+              {/* Official Archetype Card (No truncation!) */}
+              <div className="p-2 sm:p-2.5 bg-[#ffffff] border-2 border-[#333333] shadow-[2px_2px_0px_#333333] text-center shrink-0">
+                <span className="text-[8px] font-mono font-black uppercase text-[#ef3b2c] tracking-wider block mb-0.5">
+                  OFFICIAL ARCHETYPE
+                </span>
+                <div className="font-display text-[13px] sm:text-[14px] text-[#333333] uppercase leading-snug whitespace-normal break-words">
                   &ldquo;{roast.archetype}&rdquo;
                 </div>
               </div>
 
-              {/* Savage Quote Card */}
-              <div className="p-2.5 bg-[#ffffff] border-2 border-[#333333] my-1 shrink-0">
-                <p className="text-[10.5px] italic text-[#333333] leading-snug line-clamp-3">
+              {/* Savage Quote Card (Clean, complete text) */}
+              <div className="p-2.5 sm:p-3 bg-[#ffffff] border-2 border-[#333333] shadow-[2px_2px_0px_#333333] shrink-0">
+                <p className="text-[10.5px] sm:text-[11px] italic text-[#333333] leading-snug font-medium">
                   &ldquo;{roast.one_line_description}&rdquo;
                 </p>
               </div>
 
-              {/* Quick Stats Grid */}
-              <div className="grid grid-cols-2 gap-1.5 my-1 text-center shrink-0">
-                <div className="p-1.5 bg-[#ffffff] border-2 border-[#333333]">
-                  <span className="text-[8px] text-[#333333] uppercase block font-bold">Shorts Ratio</span>
-                  <span className="text-[14px] font-black text-[#ef3b2c]">{facts.shortsPercentage}%</span>
+              {/* Quick Stats Grid with breathing room */}
+              <div className="grid grid-cols-2 gap-2 text-center shrink-0">
+                <div className="p-1.5 sm:p-2 bg-[#ffffff] border-2 border-[#333333] shadow-[2px_2px_0px_#333333]">
+                  <span className="text-[8px] sm:text-[8.5px] text-[#555555] uppercase block font-bold">Shorts Ratio</span>
+                  <span className="text-[14px] sm:text-[15px] font-black text-[#ef3b2c]">{facts.shortsPercentage}%</span>
                 </div>
-                <div className="p-1.5 bg-[#ffffff] border-2 border-[#333333]">
-                  <span className="text-[8px] text-[#333333] uppercase block font-bold">Top Addiction</span>
-                  <span className="text-[11px] font-bold text-[#333333] truncate block">
+                <div className="p-1.5 sm:p-2 bg-[#ffffff] border-2 border-[#333333] shadow-[2px_2px_0px_#333333]">
+                  <span className="text-[8px] sm:text-[8.5px] text-[#555555] uppercase block font-bold">Top Sink</span>
+                  <span className="text-[10.5px] sm:text-[11px] font-bold text-[#333333] truncate block" title={facts.topChannels[0]?.name}>
                     {facts.topChannels[0]?.name || "N/A"}
                   </span>
                 </div>
               </div>
 
-              {/* Red Flags */}
-              <div className="space-y-1 my-1 shrink-0">
-                <div className="p-1.5 bg-[#ffffff] border-2 border-[#333333] text-[9.5px] text-[#333333] flex items-start gap-1">
-                  <span className="text-[#ef3b2c] font-black shrink-0">🚩</span>
-                  <span className="line-clamp-2 leading-tight">{roast.red_flags[0]}</span>
+              {/* Single Top Forensic Receipt (NO half-lines, NO truncation!) */}
+              <div className="p-2 sm:p-2.5 bg-[#ffffff] border-2 border-[#333333] shadow-[2px_2px_0px_#333333] shrink-0 text-left">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="text-[8px] font-mono font-black text-[#ffffff] px-1.5 py-0.5 bg-[#ef3b2c] border border-[#333333] uppercase">
+                    FORENSIC RECEIPT
+                  </span>
                 </div>
-                {roast.red_flags[1] && (
-                  <div className="p-1.5 bg-[#ffffff] border-2 border-[#333333] text-[9.5px] text-[#333333] flex items-start gap-1">
-                    <span className="text-[#ef3b2c] font-black shrink-0">🚩</span>
-                    <span className="line-clamp-1 leading-tight">{roast.red_flags[1]}</span>
-                  </div>
-                )}
+                <p className="text-[9.5px] sm:text-[10px] font-medium text-[#333333] leading-tight">
+                  {roast.red_flags[0]}
+                </p>
               </div>
 
               {/* Bottom Clearance Watermark */}
-              <div className="mt-auto pt-2 pb-1.5 px-2 text-center shrink-0 border-t-2 border-[#333333] bg-[#ffffff]">
-                <div className="font-display text-[12px] uppercase">
+              <div className="pt-2 pb-1 px-2 text-center shrink-0 border-t-2 border-[#333333] bg-[#ffffff] border-2 shadow-[2px_2px_0px_#333333]">
+                <div className="font-display text-[11px] sm:text-[12px] uppercase tracking-wide">
                   HOW COOKED IS YOUR YOUTUBE?
                 </div>
-                <div className="text-[9px] font-bold text-[#ef3b2c] mt-0.5">
-                  POP-UP STORYBOOK AUDIT
+                <div className="text-[8.5px] sm:text-[9px] font-mono font-black text-[#ef3b2c]">
+                  YOUTUBEROAST.VERCEL.APP
                 </div>
               </div>
             </div>
@@ -185,47 +201,54 @@ export function ShareCardModal({ isOpen, onClose, result }: ShareCardModalProps)
             /* 1:1 Square Card in Karl Style */
             <div
               ref={cardRef}
-              className="w-[280px] sm:w-[310px] aspect-square p-4 bg-[#ffe600] border-2 border-[#333333] relative overflow-hidden flex flex-col justify-between shrink-0 text-[#333333]"
+              className="w-[290px] sm:w-[325px] aspect-square p-3.5 sm:p-4 bg-[#ffe600] border-2 border-[#333333] shadow-[4px_4px_0px_#333333] relative overflow-hidden flex flex-col justify-between shrink-0 text-[#333333]"
             >
-              <div className="flex items-center justify-between pb-1 border-b-2 border-[#333333] shrink-0">
+              <div className="flex items-center justify-between pb-1.5 border-b-2 border-[#333333] shrink-0">
                 <span className="font-display text-[14px] uppercase">
                   YOUTUBE ROAST
                 </span>
-                <span className="text-[8px] font-bold px-1.5 py-0.5 bg-[#ffffff] border border-[#333333]">
-                  AUDIT
+                <span className="text-[8px] font-mono font-bold px-1.5 py-0.5 bg-[#ffffff] border border-[#333333]">
+                  DOPAMINE AUDIT
                 </span>
               </div>
 
-              <div className="text-center py-2 bg-[#007fff] border-2 border-[#333333] rounded-globe my-1 text-[#ffffff] shrink-0">
-                <div className="font-display text-[38px] text-[#ffffff] leading-none">
-                  {facts.brainrotScore}
-                  <span className="text-[15px] font-bold">/100</span>
-                </div>
-                <div className="text-[9px] uppercase font-bold tracking-wider">
+              {/* Blue Score Globe */}
+              <div className="text-center py-2 px-3 bg-[#007fff] border-2 border-[#333333] rounded-globe text-[#ffffff] shrink-0 my-0.5 shadow-[2px_2px_0px_#333333]">
+                <span className="text-[8px] uppercase font-bold tracking-wider text-[#ffffff]/90 block">
                   BRAINROT INDEX
+                </span>
+                <div className="font-display text-[34px] sm:text-[38px] text-[#ffffff] leading-none my-0.5">
+                  {facts.brainrotScore}
+                  <span className="text-[14px] font-bold">/100</span>
                 </div>
+                <span className="text-[8.5px] font-mono font-bold uppercase text-[#ffffff] px-1.5 py-0.5 bg-[#111111]/30 rounded">
+                  {getScoreLabel(facts.brainrotScore)}
+                </span>
               </div>
 
-              <div className="p-2 bg-[#ffffff] border-2 border-[#333333] text-center my-1 shrink-0">
-                <div className="font-display text-[13px] text-[#333333] truncate">
+              {/* Archetype & Savage Quote (No cutoffs) */}
+              <div className="p-2 bg-[#ffffff] border-2 border-[#333333] text-center shrink-0 my-0.5 shadow-[2px_2px_0px_#333333]">
+                <div className="font-display text-[12px] sm:text-[13px] text-[#333333] uppercase leading-tight whitespace-normal break-words">
                   &ldquo;{roast.archetype}&rdquo;
                 </div>
-                <p className="text-[9.5px] italic text-[#333333] line-clamp-2 mt-0.5">
+                <p className="text-[9.5px] sm:text-[10px] italic text-[#555555] font-medium leading-tight mt-1 line-clamp-2">
                   &ldquo;{roast.one_line_description}&rdquo;
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-1 text-center shrink-0">
-                <div className="p-1 bg-[#ffffff] border-2 border-[#333333] text-[9px] font-bold">
-                  SHORTS: <span className="text-[#ef3b2c]">{facts.shortsPercentage}%</span>
+              {/* Stats Bar */}
+              <div className="grid grid-cols-2 gap-1.5 text-center shrink-0">
+                <div className="p-1.5 bg-[#ffffff] border-2 border-[#333333] text-[9.5px] font-bold">
+                  SHORTS: <span className="text-[#ef3b2c] font-black">{facts.shortsPercentage}%</span>
                 </div>
-                <div className="p-1 bg-[#ffffff] border-2 border-[#333333] text-[9px] font-bold truncate">
+                <div className="p-1.5 bg-[#ffffff] border-2 border-[#333333] text-[9.5px] font-bold truncate">
                   {facts.topChannels[0]?.name || "Creator"}
                 </div>
               </div>
 
-              <div className="pt-1.5 border-t-2 border-[#333333] text-center text-[10px] font-display uppercase shrink-0">
-                HOW COOKED IS YOUR ATTENTION SPAN?
+              {/* Bottom URL */}
+              <div className="pt-1.5 border-t-2 border-[#333333] text-center text-[9px] font-mono font-black uppercase text-[#ef3b2c] shrink-0">
+                GET ROASTED AT YOUTUBEROAST.VERCEL.APP
               </div>
             </div>
           )}

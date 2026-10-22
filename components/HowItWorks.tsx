@@ -30,7 +30,7 @@ export function HowItWorks() {
       step: "04",
       title: "SAVAGE ROAST & RX",
       tag: "NO MERCY",
-      desc: "Gemini 2.5 Flash assigns your archetype, lists your red flags, caught-in-4K habits, and issues a printable medical dopamine detox prescription.",
+      desc: "Gemini 2.5 Flash assigns your archetype, itemizes forensic receipts of shame, logs pathological coping rituals, and prints a medical detox prescription.",
       accent: "bg-[#ef3b2c] text-[#ffffff]",
     },
   ];

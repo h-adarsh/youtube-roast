@@ -93,16 +93,23 @@ function HighlightedText({
   text: string;
   channelNames?: string[];
 }) {
-  // Regex pattern for quoted strings like '...' or "...", percentages like 0%, and known channels
   const elements = useMemo(() => {
     if (!text) return null;
 
-    // Normalize known channel names into escaped pattern
-    const validChannels = channelNames
-      .filter((c) => c && c.length >= 3)
-      .map((c) => c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    // Deduplicate and filter channel names (longest first to match specific sub-names correctly)
+    const uniqueChannels = Array.from(
+      new Set(channelNames.map((c) => c?.trim()).filter(Boolean))
+    )
+      .filter((c) => c.length >= 3)
+      .sort((a, b) => b.length - a.length);
 
-    const channelPattern = validChannels.length > 0 ? `|(${validChannels.join("|")})` : "";
+    const validChannelsEscaped = uniqueChannels.map((c) =>
+      c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    );
+
+    // CRITICAL: Use non-capturing group (?:...) inside the regex so String.prototype.split does NOT duplicate captured tokens!
+    const channelPattern =
+      validChannelsEscaped.length > 0 ? `|(?:${validChannelsEscaped.join("|")})` : "";
     const regex = new RegExp(
       `(['"][^'"\\n]{3,60}['"]|\\b\\d+%(?:\\s+Shorts)?\\b|\\b\\d+\\s+(?:videos|channels|saal|hours|minute|ghante)\\b${channelPattern})`,
       "gi"
@@ -133,7 +140,7 @@ function HighlightedText({
       }
 
       // Check for channel name match
-      const matchedChannel = validChannels.find(
+      const matchedChannel = uniqueChannels.find(
         (c) => c.toLowerCase() === part.toLowerCase()
       );
       if (matchedChannel) {
@@ -810,14 +817,22 @@ export function RoastResultView({
               )}
             </div>
 
-            {/* Red Flags Courtroom Showcase */}
+            {/* Forensic Receipts of Shame */}
             <div className="p-4 xs:p-5 sm:p-7 bg-[#ffffff] border-2 border-[#333333]">
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b-2 border-[#333333]">
-                <AlertTriangle className="w-5 h-5 text-[#ef3b2c]" />
-                <h2 className="font-display text-[22px] xs:text-[24px] sm:text-[28px] text-[#ef3b2c] uppercase leading-none">
-                  RED FLAGS IN 4K ({roast.red_flags.length})
-                </h2>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2 pb-2.5 border-b-2 border-[#333333]">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-[#ef3b2c]" />
+                  <h2 className="font-display text-[20px] xs:text-[22px] sm:text-[26px] text-[#ef3b2c] uppercase leading-none">
+                    FORENSIC RECEIPTS OF SHAME ({roast.red_flags.length})
+                  </h2>
+                </div>
+                <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase text-[#333333] bg-[#ffe600] px-2 py-0.5 border border-[#333333] w-fit">
+                  EXHIBIT A – {String.fromCharCode(64 + Math.min(26, roast.red_flags.length))} // NO BAIL
+                </span>
               </div>
+              <p className="text-[11.5px] sm:text-[12.5px] text-[#555555] font-medium italic mb-4">
+                &ldquo;Itemized algorithmic evidence submitted directly to dopamine court without parole.&rdquo;
+              </p>
 
               <div className="space-y-3">
                 {roast.red_flags.map((flag, idx) => (
@@ -825,7 +840,7 @@ export function RoastResultView({
                     key={idx}
                     className="flex flex-col xs:flex-row xs:items-start gap-2 xs:gap-3 p-3 bg-[#ffffff] border-2 border-[#333333] text-[13px] sm:text-[14px] text-[#333333] hover:bg-yellow-50/50 transition-colors"
                   >
-                    <span className="text-[10px] sm:text-[11px] font-black text-[#ffffff] px-2 py-0.5 bg-[#ef3b2c] border border-[#333333] shrink-0 self-start">
+                    <span className="text-[10px] sm:text-[11px] font-black text-[#ffffff] px-2 py-0.5 bg-[#ef3b2c] border border-[#333333] shrink-0 self-start font-mono">
                       RECEIPT #{idx + 1}
                     </span>
                     <span className="leading-snug font-medium">
@@ -836,17 +851,28 @@ export function RoastResultView({
               </div>
             </div>
 
-            {/* Habits Exposed */}
+            {/* Pathological Coping Rituals */}
             {roast.habits_exposed && roast.habits_exposed.length > 0 && (
               <div className="p-4 xs:p-5 sm:p-6 bg-[#ffffff] border-2 border-[#333333]">
-                <div className="font-display text-[18px] xs:text-[20px] sm:text-[24px] text-[#333333] uppercase mb-3 flex items-center gap-2">
-                  <span>CAUGHT IN 4K: VIEWING HABITS</span>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2 pb-2.5 border-b-2 border-[#333333]">
+                  <div className="font-display text-[18px] xs:text-[20px] sm:text-[24px] text-[#333333] uppercase flex items-center gap-2">
+                    <Activity className="w-5 h-5 text-[#007fff]" />
+                    <span>PATHOLOGICAL COPING RITUALS</span>
+                  </div>
+                  <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase text-[#ffffff] bg-[#007fff] px-2 py-0.5 border border-[#333333] w-fit">
+                    SURVEILLANCE WIRETAP
+                  </span>
                 </div>
-                <ul className="space-y-2.5">
+                <p className="text-[11.5px] sm:text-[12.5px] text-[#555555] font-medium italic mb-4">
+                  &ldquo;The involuntary mental gymnastics you run on autopilot to escape your actual life.&rdquo;
+                </p>
+                <ul className="space-y-3">
                   {roast.habits_exposed.map((habit, idx) => (
                     <li key={idx} className="text-[13px] sm:text-[14px] text-[#333333] flex items-start gap-2.5">
-                      <span className="text-[#ef3b2c] font-black text-[16px] leading-none shrink-0">✕</span>
-                      <span className="leading-snug">
+                      <span className="px-1.5 py-0.5 bg-[#ef3b2c]/10 text-[#ef3b2c] border border-[#ef3b2c]/40 font-mono text-[10px] font-black uppercase shrink-0 mt-0.5">
+                        LOOP #{idx + 1}
+                      </span>
+                      <span className="leading-snug font-medium">
                         <HighlightedText text={habit} channelNames={channelNames} />
                       </span>
                     </li>

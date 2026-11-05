@@ -1,105 +1,176 @@
-# 🔥 YouTube Roast — AI Dopamine & Attention Span Teardown
+# YouTube Roast — AI Dopamine & Attention Span Teardown
 
-An AI-powered web application that audits your real YouTube watch habits, sub-60-second dopamine traps, and subscriptions to calculate your deterministic **Brainrot Score (0–100)** and deliver a savage, fact-grounded roast powered by **Google Gemini 2.5 Flash**.
+## Deterministic Brainrot Scoring and Fact-Grounded Comedy Roasts Powered by Gemini 2.5 Flash
 
-Built in the hand-illustrated **Karl Pop-Up Storybook Diorama** design aesthetic with full mobile responsiveness, end-to-end security, and multi-language comedy engines.
-
----
-
-## 🎨 Visual Identity: Karl Storybook Diorama
-
-The application is styled with a distinct, pop-up storybook diorama on a sunny afternoon:
-- **Palette:** Saturated, flat, and warm — `#ffe600` Signal Yellow canvas, `#007fff` Azure globe, `#ef3b2c` Roof Coral accents, `#ffffff` Cloud White cards, and crisp `#333333` Charcoal Ink borders.
-- **Typography:** Custom ultra-heavy display typography (**Changa One**) paired with clean uppercase Arial navigation links.
-- **Composition:** Dutch canal houses anchoring an azure globe with drifting paper clouds, sticker-badge severity toggles, and zero generic gradients or blurry shadows.
+**YouTube Roast** is an open-source, AI-powered entertainment and digital wellbeing platform that audits your real YouTube watch habits, sub-60-second dopamine traps (Shorts), and subscriptions to calculate your mathematical **Brainrot Score (0–100)** and serve a savage, fact-grounded roast. Built using the hand-illustrated **Karl Pop-Up Storybook Diorama** design aesthetic, it pairs deterministic algorithms with **Google Gemini 2.5 Flash** to roast your taste without generic clichés—quoting real channels, playlists, and viewing ratios across English and colloquial Hinglish comedy engines while adhering to zero-data-retention security protocols.
 
 ---
 
-## 🚀 Key Features
+### Tech Stack
 
-### 1. 🤖 Fact-Grounded Gemini 2.5 Flash Roasting
-- **Every joke quotes real channels, playlists, or stats:** Generic roasts are strictly banned by prompt guardrails.
-- **Bilingual Humor Engines:**
-  - **English Mode:** Contemporary internet slang (*brainrot, caught in 4K, dopamine receptors on life support*).
-  - **Hinglish (Desi Mode):** Authentic colloquial humor (*Tanmay Bhat / CarryMinati style* with relatable Indian punchlines).
-- **3 Severity Tiers:** `Mild` (gentle sibling teasing), `Savage` (brutally honest), and `Nuclear` (unhinged existential teardown).
-
-### 2. 🧠 Deterministic Brainrot Scoring Algorithm
-- Calculated purely in mathematical code, not through unpredictable AI hallucinations.
-- **Formula Inputs:**
-  - Ratio of Shorts (<60s duration) vs. longform content.
-  - Educational vs. entertainment percentage distribution.
-  - Binge concentration factor (top 3 channels dominance).
-  - Subscription sprawl (>60 channels penalty).
-- Guarantees that the exact same YouTube data always yields the exact same 0–100 score.
-
-### 3. 👻 "Ghost Mode" & Private Account Fallback
-- If a user has **"Keep all my liked videos private"** enabled in YouTube Privacy Settings or has 0 public likes, the app does not crash or show blank numbers.
-- It activates **Ghost Mode**, analyzes their subscriptions and playlists instead, alerts them with an informational banner, and serves a dedicated *Paranoid Incognito Ghost* roast.
-
-### 4. ⚔️ Friend Duel Mode (`/duel`)
-- Side-by-side battle arena comparing two roast results.
-- Determines the winner based on Brainrot Scores, category breakdowns, and head-to-head dopamine dependency metrics.
-- Includes one-click challenge link generation for social media.
-
-### 5. 💊 Dopamine Prescription Rx
-- Clinical breakdown of dopamine receptors featuring:
-  - Comical medical diagnosis (e.g., *Acute Shorts-Induced Cerebral Decay*).
-  - Brainrot stage assessment (Stages 1 through 4).
-  - Prescribed dosages (e.g., *45 minutes of touching physical grass shoes-off*).
-  - Urgent black-box warnings.
-
-### 6. 📸 Downloadable Share Cards
-- High-contrast, square shareable card rendered in client-side canvas via `html-to-image`.
-- One-click share to X (Twitter) and instant clipboard copy.
-
-### 7. 🎭 Interactive Demo Profiles
-- Test the application instantly with 3 realistic pre-computed profiles without needing Google Cloud credentials:
-  - *The 3 AM Brainrot Doomscroller*
-  - *The 5 AM Cold-Shower Hustle Bro*
-  - *The Cozy Nostalgia Escapist*
+- **Client** - Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v3 (Karl Storybook Diorama Design Tokens), Lucide Icons, `html-to-image`, `canvas-confetti`
+- **Server** - Node.js runtime (Next.js Route Handlers), Google Gemini 2.5 Flash (Generative Language API), Google OAuth 2.0 (PKCE), YouTube Data API v3, Zod, AES-256-GCM Encryption
 
 ---
 
-## 🛡️ Security & Privacy Architecture
+## Architecture & System Workflow
 
-| Security Layer | Implementation |
-|---|---|
-| **Google Login** | OAuth 2.0 Authorization Code flow with PKCE (`code_verifier` & `code_challenge` SHA-256 base64url) |
-| **Minimal Scope** | Strictly requests read-only access: `https://www.googleapis.com/auth/youtube.readonly` |
-| **Instant Token Revocation** | Access token is used on-demand and **immediately revoked** (`oauth2.googleapis.com/revoke`) within 5 seconds |
-| **Token Handling** | AES-256-GCM encryption in HttpOnly, SameSite cookies; zero refresh tokens stored |
-| **Prompt Injection Defense** | Strips control characters, truncates input, isolates untrusted YouTube strings in delimited `<USER_DATA>` blocks |
-| **Output Validation** | Strict Zod schema parsing; rejects non-conforming AI outputs and uses deterministic fallback |
-| **Sliding Window Rate Limiting** | In-memory IP-based rate limiting (15 requests per 10 minutes) to prevent quota exhaustion |
-| **Automatic Retries** | Exponential backoff retry logic (with jitter) for handling Gemini API 429 and 503 limits |
-| **Zero Permanent Storage** | No raw video history in databases; automatic 24-hour cache TTL; instant "Delete My Data" endpoint |
-| **Hardened HTTP Headers** | Strict CSP, X-Frame-Options: DENY, X-Content-Type-Options: nosniff, Referrer-Policy |
+The diagram below illustrates the end-to-end data flow—from authenticated YouTube telemetry extraction and ephemeral token disposal to deterministic math scoring and Gemini prompt generation:
+
+```mermaid
+flowchart TD
+    subgraph Client_App["Client Application (Karl Storybook Diorama UI)"]
+        A["Landing Page & Severity Selector (Mild / Savage / Nuclear)"]
+        B["Language Engine Toggle (English / Desi Hinglish)"]
+        C["Instant Demo Profiles (The 3 AM Doomscroller, Hustle Bro)"]
+        D["Interactive Results (Dopamine Rx, Duel Mode, Canvas Card)"]
+    end
+
+    subgraph Security_Auth["OAuth & Security Gateway"]
+        E["Google OAuth 2.0 with PKCE (youtube.readonly)"]
+        F["Ephemeral Token Manager (Revoked in 5 Seconds)"]
+        G["In-Memory Sliding Window Rate Limiter"]
+    end
+
+    subgraph Core_Engine["Next.js Route Handlers"]
+        H["YouTube Data Collector (Likes, Shorts, Subscriptions)"]
+        I["Deterministic Brainrot Calculator (Pure Math 0–100)"]
+        J["Prompt Injection Sanitizer (<USER_DATA> Delimiter)"]
+        K["Zod Output Schema Parser & Exponential Backoff"]
+    end
+
+    subgraph External_APIs["Google APIs"]
+        L["YouTube Data API v3"]
+        M["Google Gemini 2.5 Flash API"]
+    end
+
+    A --> E
+    C --> I
+    E -->|"PKCE Auth Code"| F
+    F -->|"Fetch User Data"| L
+    L --> H
+    F -->|"Immediate Revocation via oauth2.googleapis.com"| F
+
+    H --> I
+    H --> J
+    I --> J
+    J -->|"Sanitized Context"| M
+    M --> K
+    K --> D
+```
 
 ---
 
-## 🛠️ Tech Stack
+## Installation and Usage Instructions (For End-Users)
 
-- **Framework:** Next.js 16 (App Router, Turbopack, TypeScript)
-- **Styling:** Vanilla CSS + Tailwind CSS v3 with Storybook Diorama Design Tokens
-- **Auth & APIs:** Google OAuth 2.0 (PKCE) & YouTube Data API v3
-- **AI Model:** Google Gemini 2.5 Flash (via Generative Language API)
-- **Validation:** Zod Schema Validation
-- **Visuals:** `canvas-confetti`, `html-to-image`, `lucide-react`
+If you are an evaluator, streamer, or user who wants to run and explore YouTube Roast locally without modifying code, follow these quick steps:
+
+### 1. Quick Launch (Run Locally)
+
+Ensure you have **Node.js (v20+ LTS)** installed. In your terminal:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/h-adarsh/youtube-roast.git
+cd youtube-roast
+
+# 2. Copy the sample environment file
+cp .env.example .env.local
+
+# 3. Install dependencies and start the app
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+> [!TIP]
+> **Zero-Setup Demo Mode:**
+> You do **not** need Google Cloud credentials to test the application! If you launch the app without adding Google API keys to `.env.local`, YouTube Roast automatically runs in **Demo Mode**, letting you test real roasts across pre-computed profiles instantly.
 
 ---
 
-## 🏁 Quickstart
+### 2. Available Demo Profiles
 
-### 1. Clone & Install
+You can test the scoring algorithm and roast generation immediately using the one-click demo profiles on the homepage:
+- **The 3 AM Brainrot Doomscroller:** High Shorts-to-longform ratio, unhinged meme compilations, dopamine fatigue.
+- **The 5 AM Cold-Shower Hustle Bro:** Dropshipping guides, self-improvement podcasts, sigma grindset loops.
+- **The Cozy Nostalgia Escapist:** Retro video game soundtracks, lofi beats, 2000s cartoon reruns.
+
+---
+
+### 3. How to Use the System as a Consumer
+
+#### Choosing Your Comedy Engine & Severity
+1. On the landing page, select your preferred humor language:
+   - **English Mode:** Contemporary internet slang (*brainrot, caught in 4K, dopamine receptors on life support*).
+   - **Hinglish Mode (Desi Humor):** Authentic colloquial humor inspired by Tanmay Bhat and CarryMinati with culturally relatable punchlines.
+2. Select your severity tier:
+   - `Mild` — Gentle sibling teasing.
+   - `Savage` — Brutally honest reality check.
+   - `Nuclear` — Unhinged, existential teardown.
+
+#### Authenticating & Privacy "Ghost Mode"
+1. Click **Roast My YouTube**.
+2. Sign in via Google's secure OAuth consent screen (read-only access).
+3. **Private Likes Protection:** If your YouTube account has *"Keep all my liked videos private"* enabled, the app automatically switches to **Ghost Mode**—roasting your public playlists and subscriptions instead of crashing.
+4. **Instant Token Disposal:** As soon as data is retrieved, your access token is cryptographically revoked within 5 seconds.
+
+#### Reviewing the Teardown & Dopamine Rx
+- **Deterministic Brainrot Score (0–100):** View your score calculated strictly via math from your Shorts ratio, binge concentration, and subscription sprawl.
+- **Dopamine Prescription Rx:** Inspect your comical clinical diagnosis (e.g., *Acute Shorts-Induced Cerebral Decay*), brainrot stage assessment, and required recovery dosage (*"45 minutes of touching physical grass with shoes off"*).
+- **Friend Duel Mode (`/duel`):** Challenge friends to a side-by-side battle comparing scores and channel dependencies.
+- **Downloadable Share Cards:** Click **Export Card** to render a high-contrast, square shareable badge via client-side canvas for X (Twitter) or Instagram.
+
+---
+
+#### Consuming via REST API (Direct Client Usage)
+End-users and external integrations can trigger roasts programmatically:
+
+- **Generate Roast from Sanitized Profile Telemetry:**
+  ```bash
+  curl -i -X POST http://localhost:3000/api/roast/generate \
+    -H "Content-Type: application/json" \
+    -d '{
+      "profile_name": "Demo Doomscroller",
+      "severity": "savage",
+      "language": "hinglish",
+      "metrics": {
+        "shorts_ratio": 0.85,
+        "top_channels": ["Skibidi Central", "GTA 5 Clips", "Subway Surfers BG"],
+        "subscription_count": 84
+      }
+    }'
+  ```
+
+---
+
+## Installation and Usage Instructions (For Contributors)
+
+Follow these technical instructions to clone the repository, configure live Google OAuth credentials, integrate Gemini 2.5 Flash, and run the developer suite.
+
+### Prerequisites
+
+- **Node.js:** v20.0.0+ LTS
+- **npm:** v10.0.0+
+- **Google Cloud Console Account:** For YouTube Data API v3 credentials
+- **Google AI Studio Key:** For Gemini 2.5 Flash
+
+---
+
+### Step 1: Clone Repository & Install Dependencies
+
 ```bash
 git clone https://github.com/h-adarsh/youtube-roast.git
 cd youtube-roast
 npm install
 ```
 
-### 2. Configure Environment Variables
-Copy `.env.example` to `.env.local`:
+---
+
+### Step 2: Configure Environment Variables
+
+Create `.env.local` from the provided template:
 ```bash
 cp .env.example .env.local
 ```
@@ -115,77 +186,87 @@ GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/callback
 GEMINI_API_KEY=your-gemini-api-key
 
 # Session Encryption Secret (minimum 32 characters)
-SESSION_SECRET=super-secret-random-key-at-least-32-chars-long-youtube-roast
+SESSION_SECRET=super_secret_session_key_at_least_32_characters_long
 
-# Optional Site URL
+# Local Application URL
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-> **Note:** If you don't configure Google OAuth credentials immediately, the application runs seamlessly out-of-the-box in **Demo Mode**!
-
-### 3. Run Development Server
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
 ---
 
-## ⚙️ Google Cloud Console Setup Guide
+### Step 3: Google Cloud Console Setup (Live Mode)
 
 To enable live Google login with YouTube access:
 
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
-2. Create a new project (e.g., `youtube-roast`).
-3. Enable the **YouTube Data API v3**:
-   - Navigate to **APIs & Services > Library**.
-   - Search for `YouTube Data API v3` and click **Enable**.
-4. Configure **OAuth Consent Screen**:
-   - Select User Type: **External**.
-   - App Name: `YouTube Roast`.
-   - Add scope: `https://www.googleapis.com/auth/youtube.readonly`.
-   - Under **Test Users**, add your personal Google email address.
-5. Create **OAuth 2.0 Client Credentials**:
+1. Open the [Google Cloud Console](https://console.cloud.google.com/) and create a project (`youtube-roast`).
+2. **Enable API:** Navigate to **APIs & Services > Library**, search for **YouTube Data API v3**, and click **Enable**.
+3. **Configure OAuth Consent Screen:**
+   - User Type: **External**
+   - Scopes: Add `https://www.googleapis.com/auth/youtube.readonly`
+   - Test Users: Add your personal Google email address under **Test Users** (unverified apps can support up to 100 test accounts).
+4. **Create Credentials:**
    - Go to **APIs & Services > Credentials > Create Credentials > OAuth client ID**.
    - Application Type: **Web application**.
    - Authorized JavaScript origins: `http://localhost:3000`.
    - Authorized redirect URIs: `http://localhost:3000/api/auth/callback`.
-6. Copy the **Client ID** and **Client Secret** into your `.env.local`.
+5. Copy the **Client ID** and **Client Secret** into your `.env.local`.
 
 ---
 
-## ⚠️ Platform Constraints & Architecture FAQ
+### Step 4: Start the Development Server
 
-### 1. "Free API key" vs Google Login
-- A public YouTube Data API Key only accesses public resources (search, channel public stats). It **cannot** read private user data.
-- Accessing a user's liked videos and subscriptions requires **Google OAuth 2.0** with the `https://www.googleapis.com/auth/youtube.readonly` scope.
+Launch the Next.js development server with Turbopack:
 
-### 2. Watch History & Watch Later API Restriction
-- Google deprecated API access to the `Watch History` and `Watch Later` system playlists for user privacy in 2016.
-- **Solution:** Our algorithm analyzes **Liked Videos**, **Subscriptions**, and **User-Created Playlists**, which provide an authentic snapshot of user taste without violating YouTube's API boundaries.
+```bash
+npm run dev
+```
 
-### 3. Google "Unverified App" Warning & 100 Test Users Limit
-- Apps in "Testing" status in Google Cloud Console can only be accessed by up to 100 registered test user emails and show an "Unverified App" consent screen.
-- **Solution:** To launch publicly, submit for **OAuth App Verification** in Google Cloud Console with your domain, Privacy Policy, and a screen recording demo. For immediate testing, our interactive **Demo Mode** allows anyone to test the app without Google sign-in.
-
-### 4. 7-Day Testing Mode Token Expiry
-- Refresh tokens for unverified test apps expire after 7 days.
-- **Solution:** Our application **never retains long-term tokens**. The access token is used on-demand and **immediately revoked** (`oauth2.googleapis.com/revoke`) within 5 seconds of generating the roast.
-
-### 5. Gemini Free Tier vs Paid Tier Data Terms
-- Google's terms for free-tier Gemini API keys state that prompt data may be reviewed by human reviewers to train models.
-- **Solution:** All user data is sanitized (stripping emails, IDs, and URLs) before prompting. For strict zero-retention/HIPAA/enterprise compliance, configure a paid Gemini API tier or Vertex AI endpoint.
-
-### 6. Free Tier Rate Limits (HTTP 429)
-- High concurrent traffic on Gemini free tier can hit quota limits.
-- **Solution:** Built-in **exponential backoff retry logic** (with jitter) absorbs brief traffic spikes, and automatically falls back to an algorithmic real-data generator if the upstream API is unavailable.
-
-### 7. Empty Data & Private Liked Videos
-- If a user has "Keep all my liked videos private" enabled in YouTube Settings or has no public likes, the API returns an empty video array.
-- **Solution:** The app activates **Ghost Mode**, analyzes their subscriptions and playlists instead, alerts the user with an informational banner, and serves a specialized *Paranoid Incognito Ghost* roast.
+Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## 📜 License
+### Step 5: Code Quality & Verification
 
-MIT License. Created for comedic and educational entertainment purposes.
+```bash
+# Verify TypeScript types and build production bundles
+npm run build
+
+# Run ESLint validation
+npm run lint
+```
+
+---
+
+## Contributor Expectations
+
+We welcome contributions to YouTube Roast! To preserve comedic originality, mathematical determinism, and strict privacy boundaries, contributors must observe the following ground rules:
+
+### 1. Workflow & Issues Protocol
+- Open an issue prior to introducing new humor engines, scoring weight formulas, or UI themes.
+- Reference the issue number in all PR descriptions.
+
+### 2. Branch Naming Conventions
+- `feature/<short-description>` — New features (e.g., `feature/spotify-crossover-roast`)
+- `fix/<short-description>` — Bug fixes (e.g., `fix/ghost-mode-empty-playlist-handling`)
+- `docs/<short-description>` — Documentation updates (e.g., `docs/oauth-pkce-guide`)
+- `refactor/<short-description>` — Performance improvements without functional changes
+
+### 3. Commit Message Standards
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
+- `feat: implement CarryMinati-inspired punchline generator in Hinglish engine`
+- `fix: resolve canvas rendering offset in html-to-image export card`
+- `test: add unit tests for deterministic brainrot scoring algorithm`
+- `docs: update contributor setup steps for Gemini 2.5 Flash`
+
+### 4. Architectural & Security Ground Rules
+- **No Hallucinated Scores:** The **Brainrot Score (0–100)** must strictly be computed via mathematical code in `lib/scoring.ts`—never let the AI model hallucinate numbers.
+- **Ephemeral Token Lifecycle:** User access tokens must **never** be stored in persistent databases. Every token must trigger an immediate revocation call to `oauth2.googleapis.com/revoke` within 5 seconds of telemetry extraction.
+- **Prompt Injection Isolation:** All raw YouTube strings (video titles, playlist names, channel handles) must be sanitized and strictly wrapped within delimited `<USER_DATA>` tags to prevent jailbreak attacks.
+- **Output Schema Conformance:** Every Gemini output must be validated against declarative Zod schemas. If parsing fails, fall back to the deterministic template engine.
+- **Visual Identity Purity:** UI contributions must strictly adhere to the **Karl Pop-Up Storybook Diorama** design tokens: Signal Yellow (`#ffe600`), Azure (`#007fff`), Roof Coral (`#ef3b2c`), crisp `#333333` Charcoal Ink borders, and Changa One display typography with zero blurry shadows or generic gradients.
+
+### 5. Pull Request Checklist
+1. Application builds cleanly with zero errors (`npm run build`).
+2. Lint checks pass without warnings (`npm run lint`).
+3. No API keys or Google Cloud credentials committed.
+4. Link the relevant issue (`Closes #<issue_number>`).
